@@ -39,14 +39,10 @@ advised of the possibility of such damage.
  */
 package rice.environment.logging.simple;
 
-import java.io.PrintStream;
-import java.text.*;
+import rice.environment.logging.AbstractLogManager;
+import rice.environment.logging.HeirarchyLogger;
+
 import java.util.Date;
-
-import javax.swing.text.DateFormatter;
-
-import rice.environment.logging.*;
-import rice.environment.time.TimeSource;
 
 /**
  * This logger writes its name:time:message to the printstream provided, unless the 
@@ -70,9 +66,6 @@ public class SimpleLogger extends HeirarchyLogger {
    * Constructor.
    * 
    * @param loggerName the name of this logger.
-   * @param ps the stream to print to.
-   * @param time the timesource.
-   * @param minPriority the minimum priority to display.
    */
   public SimpleLogger(String loggerName, AbstractLogManager alm, int level, boolean useDefault) {
     this.loggerName = loggerName;
@@ -87,13 +80,9 @@ public class SimpleLogger extends HeirarchyLogger {
   public void log(String message) {
     synchronized(alm) {
       String dateString = ""+alm.getTimeSource().currentTimeMillis();
-      if (alm.dateFormatter != null) {
-        try {
-          Date date = new Date(alm.getTimeSource().currentTimeMillis());            
-          dateString = alm.dateFormatter.valueToString(date);
-        } catch (ParseException pe) {
-          pe.printStackTrace();
-        }
+      if (alm.dateFormatt != null) {
+        Date date = new Date(alm.getTimeSource().currentTimeMillis());
+        dateString = date.toString();
       }
 
       alm.getPrintStream().println(alm.getPrefix()+":"+loggerName+":"+dateString+":"+message);
@@ -106,13 +95,9 @@ public class SimpleLogger extends HeirarchyLogger {
   public void logException(String message, Throwable exception) {
     synchronized(alm) {
       String dateString = ""+alm.getTimeSource().currentTimeMillis();
-      if (alm.dateFormatter != null) {
-        try {
-          Date date = new Date(alm.getTimeSource().currentTimeMillis());            
-          dateString = alm.dateFormatter.valueToString(date);
-        } catch (ParseException pe) {
-          pe.printStackTrace();
-        }
+      if (alm.dateFormatt != null) {
+        Date date = new Date(alm.getTimeSource().currentTimeMillis());
+        dateString = date.toString();
       }
       
       alm.getPrintStream().print(alm.getPrefix()+":"+loggerName+":"+dateString+":"+message+" ");
